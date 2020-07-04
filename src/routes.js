@@ -1,6 +1,6 @@
 const express = require('express')
 const Joi = require('@hapi/joi')
-const { insertItem, getItems, updateQuantity } = require('./db')
+// const { insertItem, getItems, updateQuantity } = require('./db')
 
 const router = express.Router()
 

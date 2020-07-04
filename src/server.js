@@ -5,7 +5,7 @@ const join = require('path').join;
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const { Parser } = require('json2csv');
 
 const methodOverride = require('method-override')
@@ -15,9 +15,9 @@ const methodOverride = require('method-override')
 
 
 const config = require('./config');
-const { init } = require('./db')
+// const { init } = require('./db')
 const routes = require('./routes')
-const cust = require(path.join(__dirname, 'models/customer'))
+// const cust = require(path.join(__dirname, 'models/customer'))
 
 
 const app = express()
@@ -29,7 +29,7 @@ const nodeModules = path.join(__dirname, '../node_modules');
 //const models = join(__dirname, 'app/models');
 const router = express.Router()
 
-const Customer = mongoose.model('Customers');
+// const Customer = mongoose.model('Customers');
 
 app.use(methodOverride())
 
@@ -43,62 +43,62 @@ app.use(files, express.static(files), serveIndex(files, { 'icons': true }))
 app.use(filesOut, express.static(filesOut), serveIndex(filesOut, { 'icons': true }))
 
 
-// app.use((req, res) => {
-//   res.status(404).send({
-//     message: `${req.method} ${req.url} not found`,
-//   });
-// });
-
-
-
-
-app.get('/customers', async (req, res) => {
-  //const customers = await (await Customer.find());
-  await Customer.find({}, function (err, c) {
-
-
-    if (err) {
-      console.log(err);
-
-      return res.status(500).json({ err });
-    } else {
-
-
-
-      let fields = Object.keys(JSON.parse(JSON.stringify(c[0])));
-      //console.log(Object.values(c[0]));
-
-
-      const opts = { fields, header: false };
-
-      const parser = new Parser(opts);
-      let csv = parser.parse(c);
-      console.log(csv);
-      const filename = path.join(__dirname, 'resources/files/out', 'export.csv');
-      fs.writeFile(filename, csv, function (err) {
-        if (err) {
-          return res.json(err).status(500);
-        }
-        else {
-          setTimeout(function () {
-            fs.unlink(filename, function (err) { // delete this file after 30 seconds
-              if (err) {
-                console.error(err);
-              }
-              console.log('File has been Deleted');
-            });
-
-          }, 30000);
-          res.download(filename);
-        }
-
-
-      });
-    }
-
+app.use((req, res) => {
+  res.status(404).send({
+    message: `${req.method} ${req.url} not found`,
   });
-
 });
+
+
+
+
+// app.get('/customers', async (req, res) => {
+//   //const customers = await (await Customer.find());
+//   await Customer.find({}, function (err, c) {
+
+
+//     if (err) {
+//       console.log(err);
+
+//       return res.status(500).json({ err });
+//     } else {
+
+
+
+//       let fields = Object.keys(JSON.parse(JSON.stringify(c[0])));
+//       //console.log(Object.values(c[0]));
+
+
+//       const opts = { fields, header: false };
+
+//       const parser = new Parser(opts);
+//       let csv = parser.parse(c);
+//       console.log(csv);
+//       const filename = path.join(__dirname, 'resources/files/out', 'export.csv');
+//       fs.writeFile(filename, csv, function (err) {
+//         if (err) {
+//           return res.json(err).status(500);
+//         }
+//         else {
+//           setTimeout(function () {
+//             fs.unlink(filename, function (err) { // delete this file after 30 seconds
+//               if (err) {
+//                 console.error(err);
+//               }
+//               console.log('File has been Deleted');
+//             });
+
+//           }, 30000);
+//           res.download(filename);
+//         }
+
+
+//       });
+//     }
+
+//   });
+
+// });
 
 
 //Static
@@ -118,7 +118,7 @@ function npmls() {
 
     let npms = JSON.parse(stdout);
     npms = Object.keys(npms.dependencies);
-    console.log();
+   // console.log(npms);
 
     return npms.forEach(function (e, aIndex, aArray) {
       let p = path.join(__dirname, '../node_modules/', e);
@@ -236,36 +236,36 @@ function listen() {
   console.log('Express app started on port ' + port);
 }
 
-function connect() {
-  mongoose.connection
-    .on('error', console.log)
-    .on('disconnected', connect)
-    .once('open', listen);
-  return mongoose.connect(config.db, {
-    keepAlive: 1,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-}
+// function connect() {
+//   mongoose.connection
+//     .on('error', console.log)
+//     .on('disconnected', connect)
+//     .once('open', listen);
+//   return mongoose.connect(config.db, {
+//     keepAlive: 1,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+//   });
+// }
 
 
-mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true });
+// mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true });
 
-let c = {
-  "CompanyName": "CompanyName",
-  "Name": "Name",
-  "Company": "Company",
-  "Contact": "Contact",
-  "Company2": "Company2",
-  "Phone": "Phone",
-  "Email": "Email",
-  "Address": "Address",
-};
-var cc = new Customer(c);
-cc.save(function (err, cc) {
-  if (err) return console.error(err);
+// let c = {
+//   "CompanyName": "CompanyName",
+//   "Name": "Name",
+//   "Company": "Company",
+//   "Contact": "Contact",
+//   "Company2": "Company2",
+//   "Phone": "Phone",
+//   "Email": "Email",
+//   "Address": "Address",
+// };
+// var cc = new Customer(c);
+// cc.save(function (err, cc) {
+//   if (err) return console.error(err);
 
-});
+// });
 // Initialize the database
 // init().then(() => {
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
